@@ -1,0 +1,2 @@
+serviceHost: http://wiremock:8000
+apiKey: testApiKey
