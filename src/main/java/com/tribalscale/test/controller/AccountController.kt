@@ -28,7 +28,7 @@ import javax.validation.constraints.Size
 @RestController
 @RequestMapping("/account")
 @Validated
-open class AccountController(
+class AccountController(
     private val accountTransferService: AccountTransferService,
     private val moneyTransferMapper: MoneyTransferMapper,
     private val accountMapper: AccountMapper

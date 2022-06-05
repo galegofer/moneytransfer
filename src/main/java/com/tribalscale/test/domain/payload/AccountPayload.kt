@@ -1,15 +1,9 @@
 package com.tribalscale.test.domain.payload
 
 import io.swagger.v3.oas.annotations.media.Schema
-import lombok.Builder
-import lombok.Value
-import lombok.extern.jackson.Jacksonized
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
 
-@Value
-@Builder
-@Jacksonized
 class AccountPayload(
     @Schema(description = "The account id (alphanumeric)", name = "accountId", required = true, example = "11aa23")
     val accountId: @NotBlank @Pattern(regexp = "^[a-zA-Z\\d\\s]*$") String,

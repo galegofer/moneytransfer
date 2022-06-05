@@ -18,7 +18,6 @@
     <properties>
         <java.version>11</java.version>
         <testcontainers.version>1.17.1</testcontainers.version>
-        <junit5.version>5.7.1</junit5.version>
         <reactor-test.version>3.4.18</reactor-test.version>
         <docker-maven-plugin.version>0.40.0</docker-maven-plugin.version>
         <wiremock.version>2.27.2</wiremock.version>
@@ -117,11 +116,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>

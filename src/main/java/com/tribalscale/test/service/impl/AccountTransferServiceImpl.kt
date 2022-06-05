@@ -37,7 +37,7 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                     )
                 )
             )
-            .filter { sourceAccount: Account -> sourceAccount.balance >= moneyTransfer.amount }
+            .filter { it.balance >= moneyTransfer.amount }
             .switchIfEmpty(
                 Mono.error(
                     MoneyTransferApplicationException(
@@ -48,11 +48,11 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                     )
                 )
             )
-            .doOnSuccess { sourceAccount: Account ->
+            .doOnSuccess {
                 log.info(
                     "Got source account with id: {} and balance: {}",
-                    sourceAccount.accountId,
-                    sourceAccount.balance
+                    it.accountId,
+                    it.balance
                 )
             }
             .zipWith(
@@ -67,11 +67,11 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                             )
                         )
                     )
-                    .doOnSuccess { targetAccount: Account ->
+                    .doOnSuccess {
                         log.info(
                             "Got target account with id: {} and balance: {}",
-                            targetAccount.accountId,
-                            targetAccount.balance
+                            it.accountId,
+                            it.balance
                         )
                     },
                 applyDiscountToSourceAccountAndAddToTarget(moneyTransfer)
@@ -80,8 +80,8 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
             .flatMap(Function.identity())
     }
 
-    override fun getAccountDetailsByAccountId(accountId: String): Mono<Account> {
-        return accountRepository.getByAccountId(accountId)
+    override fun getAccountDetailsByAccountId(accountId: String): Mono<Account> =
+        accountRepository.getByAccountId(accountId)
             .switchIfEmpty(
                 Mono.error(
                     MoneyTransferApplicationException(
@@ -90,10 +90,9 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                     )
                 )
             )
-    }
 
-    private fun applyDiscountToSourceAccountAndAddToTarget(moneyTransfer: MoneyTransfer): BiFunction<Account, Account, Mono<Int>> {
-        return BiFunction { sourceAccount: Account, targetAccount: Account ->
+    private fun applyDiscountToSourceAccountAndAddToTarget(moneyTransfer: MoneyTransfer): BiFunction<Account, Account, Mono<Int>> =
+        BiFunction { sourceAccount: Account, targetAccount: Account ->
             accountRepository.updateAmount(sourceAccount.accountId, sourceAccount.balance - moneyTransfer.amount)
                 .doOnSuccess {
                     log.info(
@@ -117,5 +116,4 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                         }
                 }
         }
-    }
 }
