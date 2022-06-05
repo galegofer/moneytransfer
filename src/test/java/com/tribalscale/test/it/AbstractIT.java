@@ -23,8 +23,8 @@ abstract class AbstractIT {
     public static final DockerComposeContainer composer =
             new DockerComposeContainer<>(new File("src/test/resources/compose-it.yml"))
                     .withExposedService(APPLICATION_SERVICE_NAME, APPLICATION_PORT,
-                            Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)))
-                    .withLocalCompose(true);
+                            Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(30)));
+                    //.withLocalCompose(true);
 
     static {
         composer.start();

@@ -5,16 +5,15 @@ import com.tribalscale.test.domain.MoneyTransfer
 import com.tribalscale.test.domain.payload.AccountPayload
 import com.tribalscale.test.domain.payload.MoneyTransferRequestPayload
 import com.tribalscale.test.mapper.AccountMapper
-import com.tribalscale.test.mapper.AccountMapperImpl
 import com.tribalscale.test.mapper.MoneyTransferMapper
-import com.tribalscale.test.mapper.MoneyTransferMapperImpl
 import com.tribalscale.test.service.AccountTransferService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.*
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.http.HttpStatus.OK
 import reactor.core.publisher.Mono
@@ -23,16 +22,16 @@ import reactor.test.StepVerifier
 @ExtendWith(MockitoExtension::class)
 internal class AccountControllerTest {
     @InjectMocks
-    private val underTest: AccountController? = null
+    private lateinit var underTest: AccountController
 
     @Mock
-    private val accountTransferService: AccountTransferService? = null
+    private lateinit var accountTransferService: AccountTransferService
 
     @Mock
-    private val moneyTransferMapper: MoneyTransferMapper = MoneyTransferMapperImpl()
+    private lateinit var moneyTransferMapper: MoneyTransferMapper
 
     @Mock
-    private val accountMapper: AccountMapper = AccountMapperImpl()
+    private lateinit var accountMapper: AccountMapper
 
     @Test
     fun transferFundsToAccount() {
@@ -49,10 +48,10 @@ internal class AccountControllerTest {
         `when`(moneyTransferMapper.payloadToEntity(payload))
             .thenReturn(moneyTransfer)
 
-        `when`(accountTransferService!!.transferMoneyFromAccountToAnotherAccount(moneyTransfer))
+        `when`(accountTransferService.transferMoneyFromAccountToAnotherAccount(moneyTransfer))
             .thenReturn(Mono.just(1))
 
-        val result = underTest!!.transferFundsToAccount(payload).block()
+        val result = underTest.transferFundsToAccount(payload).block()
 
         verify(accountTransferService).transferMoneyFromAccountToAnotherAccount(moneyTransfer)
         verify(moneyTransferMapper).payloadToEntity(payload)
@@ -72,9 +71,9 @@ internal class AccountControllerTest {
         `when`(accountMapper.entityToPayload(account))
             .thenReturn(accountPayload)
 
-        `when`(accountTransferService!!.getAccountDetailsByAccountId(accountId))
+        `when`(accountTransferService.getAccountDetailsByAccountId(accountId))
             .thenReturn(Mono.just(account))
-        val result = underTest!!.getAccountDetails("1")
+        val result = underTest.getAccountDetails("1")
 
         StepVerifier.create(result)
             .expectNextMatches { o: AccountPayload -> accountPayload == o }

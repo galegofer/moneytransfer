@@ -3,6 +3,6 @@ services:
   application:
     image: moneytransfer:latest
     ports:
-      - 8000:8000
+      - "8000:8000"
     environment:
       JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n"

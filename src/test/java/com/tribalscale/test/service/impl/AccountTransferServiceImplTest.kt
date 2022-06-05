@@ -21,10 +21,10 @@ import reactor.test.StepVerifier
 @ExtendWith(MockitoExtension::class)
 internal class AccountTransferServiceImplTest {
     @Mock
-    private val accountRepository: AccountRepository? = null
+    private lateinit var accountRepository: AccountRepository
 
     @InjectMocks
-    private val underTest: AccountTransferServiceImpl? = null
+    private lateinit var underTest: AccountTransferServiceImpl
 
     @Test
     fun transferMoneyFromAccountToAnotherAccount() {
@@ -33,7 +33,7 @@ internal class AccountTransferServiceImplTest {
         val sourceAccount = Account(accountId = "1", balance = 3000.0, currency = "EUR")
         val targetAccount = Account(accountId = "2", balance = 1000.0, currency = "EUR")
 
-        `when`(accountRepository!!.getByAccountId(moneyTransfer.sourceAccount))
+        `when`(accountRepository.getByAccountId(moneyTransfer.sourceAccount))
             .thenReturn(Mono.just(sourceAccount))
         `when`(accountRepository.getByAccountId(moneyTransfer.targetAccount))
             .thenReturn(Mono.just(targetAccount))
@@ -51,7 +51,7 @@ internal class AccountTransferServiceImplTest {
             )
         )
             .thenReturn(Mono.just(2))
-        val result = underTest!!.transferMoneyFromAccountToAnotherAccount(moneyTransfer)
+        val result = underTest.transferMoneyFromAccountToAnotherAccount(moneyTransfer)
         StepVerifier.create(result)
             .expectNextMatches { value: Int -> value == 2 }
             .verifyComplete()
@@ -71,12 +71,12 @@ internal class AccountTransferServiceImplTest {
         val sourceAccount = Account(accountId = "1", balance = 3000.0, currency = "EUR")
         val targetAccount = Account(accountId = "2", balance = 1000.0, currency = "EUR")
 
-        `when`(accountRepository!!.getByAccountId(moneyTransfer.sourceAccount))
+        `when`(accountRepository.getByAccountId(moneyTransfer.sourceAccount))
             .thenReturn(Mono.empty())
         `when`(accountRepository.getByAccountId(moneyTransfer.targetAccount))
             .thenReturn(Mono.just(targetAccount))
         val thrown =
-            catchThrowable { underTest!!.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
+            catchThrowable { underTest.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
         assertThat(thrown)
             .isInstanceOf(MoneyTransferApplicationException::class.java)
             .hasFieldOrPropertyWithValue("statusCode", HttpStatus.NOT_FOUND.value())
@@ -95,13 +95,13 @@ internal class AccountTransferServiceImplTest {
         val sourceAccount = Account(accountId = "1", balance = 3000.0, currency = "EUR")
         val targetAccount = Account(accountId = "2", balance = 1000.0, currency = "EUR")
 
-        `when`(accountRepository!!.getByAccountId(moneyTransfer.sourceAccount))
+        `when`(accountRepository.getByAccountId(moneyTransfer.sourceAccount))
             .thenReturn(Mono.just(sourceAccount))
         `when`(accountRepository.getByAccountId(moneyTransfer.targetAccount))
             .thenReturn(Mono.empty())
 
         val thrown =
-            catchThrowable { underTest!!.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
+            catchThrowable { underTest.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
 
         assertThat(thrown)
             .isInstanceOf(MoneyTransferApplicationException::class.java)
@@ -121,12 +121,12 @@ internal class AccountTransferServiceImplTest {
         val sourceAccount = Account(accountId = "1", balance = 1000.0, currency = "EUR")
         val targetAccount = Account(accountId = "2", balance = 1000.0, currency = "EUR")
 
-        `when`(accountRepository!!.getByAccountId(moneyTransfer.sourceAccount))
+        `when`(accountRepository.getByAccountId(moneyTransfer.sourceAccount))
             .thenReturn(Mono.just(sourceAccount))
         `when`(accountRepository.getByAccountId(moneyTransfer.targetAccount))
             .thenReturn(Mono.just(targetAccount))
         val thrown =
-            catchThrowable { underTest!!.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
+            catchThrowable { underTest.transferMoneyFromAccountToAnotherAccount(moneyTransfer).block() }
 
         assertThat(thrown)
             .isInstanceOf(MoneyTransferApplicationException::class.java)

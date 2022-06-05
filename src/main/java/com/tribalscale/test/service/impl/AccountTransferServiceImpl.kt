@@ -15,7 +15,7 @@ import java.util.function.BiFunction
 import java.util.function.Function
 
 @Service
-open class AccountTransferServiceImpl(private val accountRepository: AccountRepository) : AccountTransferService {
+class AccountTransferServiceImpl(private val accountRepository: AccountRepository) : AccountTransferService {
 
     private val log = KotlinLogging.logger {}
 

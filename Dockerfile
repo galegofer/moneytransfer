@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:jre-11.0.10_9-alpine
+FROM adoptopenjdk/openjdk11:x86_64-alpine-jre-11.0.15_10
 RUN apk add --update \
     curl \
     && rm -rf /var/cache/apk/*
