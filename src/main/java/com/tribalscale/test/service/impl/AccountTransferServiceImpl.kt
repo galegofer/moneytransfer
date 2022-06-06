@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Mono
-import java.util.function.BiFunction
 import java.util.function.Function
 
 @Service
@@ -33,7 +32,8 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                         message = String.format(
                             "Source account with id: %s, doesn't exist",
                             moneyTransfer.sourceAccount
-                        ), statusCode = NOT_FOUND.value()
+                        ),
+                        statusCode = NOT_FOUND.value()
                     )
                 )
             )
@@ -44,7 +44,8 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                         message = String.format(
                             "Insufficient funds at Source account with id: %s",
                             moneyTransfer.sourceAccount
-                        ), statusCode = BAD_REQUEST.value()
+                        ),
+                        statusCode = BAD_REQUEST.value()
                     )
                 )
             )
@@ -63,7 +64,8 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                                 message = String.format(
                                     "Target account with id: %s, doesn't exist",
                                     moneyTransfer.targetAccount
-                                ), statusCode = NOT_FOUND.value()
+                                ),
+                                statusCode = NOT_FOUND.value()
                             )
                         )
                     )
@@ -91,8 +93,8 @@ class AccountTransferServiceImpl(private val accountRepository: AccountRepositor
                 )
             )
 
-    private fun applyDiscountToSourceAccountAndAddToTarget(moneyTransfer: MoneyTransfer): BiFunction<Account, Account, Mono<Int>> =
-        BiFunction { sourceAccount: Account, targetAccount: Account ->
+    private fun applyDiscountToSourceAccountAndAddToTarget(moneyTransfer: MoneyTransfer): (Account, Account) -> Mono<Int> =
+        { sourceAccount: Account, targetAccount: Account ->
             accountRepository.updateAmount(sourceAccount.accountId, sourceAccount.balance - moneyTransfer.amount)
                 .doOnSuccess {
                     log.info(
